@@ -37,7 +37,7 @@ namespace WAMA.Core.ViewModel
         /// <summary>
         /// Gets or sets the member i ds of this UserSearchFilterViewModel.
         /// </summary>
-        [Display(Name = "Comma separated member IDs")]
+        [Display(Name = "Member ID(s)")]
         public string CommaSeparatedMemberIDs { get; set; }
 
         /// <summary>

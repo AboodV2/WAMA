@@ -31,6 +31,27 @@ namespace WAMA.Core.Extensions
             };
         }
 
+
+        /// <summary>
+        /// Updates the general Properties of this DTO. <para />
+        /// General Properties, in this case means, they don't require special flow to be updated.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="userDTO">The user DTO.</param>
+        /// <returns></returns>
+        public static UserAccount UpdateDTO(this UserAccountViewModel user, UserAccount userDTO)
+        {
+            userDTO.AccountType = user.AccountType;
+            userDTO.FirstName = user.FirstName;
+            userDTO.LastName = user.LastName;
+            userDTO.MiddleName = user.MiddleName;
+            userDTO.Email = user.Email;
+            userDTO.Gender = user.Gender;
+            userDTO.InstitutionAffiliation = user.InstitutionAffiliation;
+
+            return userDTO;
+        }
+
         /// <summary>
         /// Converts the DTO to ViewModel.
         /// </summary>

@@ -22,5 +22,10 @@ namespace WAMA.Core.Models.DTOs
         /// Gets or sets the member of this Waiver.
         /// </summary>
         public virtual UserAccount Member { get; set; }
+
+        /// <summary>
+        /// Gets or sets the signature of this Waiver.
+        /// </summary>
+        public string Signature { get; set; }
     }
 }

@@ -44,7 +44,7 @@ namespace WAMA.Core.Models.Service
         /// </summary>
         /// <param name="memberId">The member identifier.</param>
         /// <returns></returns>
-        Task<IEnumerable<CheckInActivityViewModel>> GetCheckInActivitiesForMemberAsync(string memberId);
+        Task<IEnumerable<CheckInActivityViewModel>> GetCheckInActivitiesAsync(string memberId);
 
         /// <summary>
         /// Gets the check in activities for period asynchronous.

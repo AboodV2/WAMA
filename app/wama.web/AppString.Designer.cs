@@ -186,6 +186,15 @@ namespace WAMA.Web {
         }
         
         /// <summary>
+        ///    Looks up a localized string similar to Error setting password, ensure passwords match..
+        /// </summary>
+        public static string GenericSettingPasswordError {
+            get {
+                return ResourceManager.GetString("GenericSettingPasswordError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///    Looks up a localized string similar to Manager.
         /// </summary>
         public static string ManagerLabel {

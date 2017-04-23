@@ -1,0 +1,45 @@
+﻿@{
+    @using Microsoft.AspNetCore.Mvc.Controllers;
+    @using WAMA.Core.Models.DTOs;
+    @using WAMA.Core.ViewModel.User;
+    @using WAMA.Web.Controllers;
+    @using WAMA.Core.Extensions;
+
+    @model UserAccountViewModel
+
+    @if (Model.AccountType == UserAccountType.Patron)
+    {
+
+        var controllerName = nameof(UserToolController).StripController();
+
+        var details = nameof(UserToolController.ViewAccount);
+        var certifications = nameof(UserToolController.ViewCertifications); ;
+        var checkins = nameof(UserToolController.ViewCheckins);
+        var waivers = nameof(UserToolController.ViewWaivers);
+
+        var actionContext = ViewContext.ActionDescriptor as ControllerActionDescriptor;
+        var actionName = actionContext?.ActionName ?? string.Empty;
+
+        var linkActiveStatusMap = new Dictionary<KeyValuePair<string, string>, bool>
+        {
+            { new KeyValuePair<string, string>(details, "Details"), actionName.Equals(details) },
+            { new KeyValuePair<string, string>(certifications, "Certifications"), actionName.Equals(certifications) },
+            { new KeyValuePair<string, string>(checkins, "Check Ins"), actionName.Equals(checkins) },
+            { new KeyValuePair<string, string>(waivers, "Waivers"), actionName.Equals(waivers) },
+        };
+
+        <div>
+            <ul class="nav nav-pills">
+                @foreach (var linkActiveStatus in linkActiveStatusMap)
+                {
+                    <li role="presentation" class="@(linkActiveStatus.Value ? "active" : "")">
+                        <a href="@Url.Action(linkActiveStatus.Key.Key, controllerName, new { MemberId = Model.MemberId })">
+                            @linkActiveStatus.Key.Value
+                        </a>
+                    </li>
+                }
+            </ul>
+            <br />
+        </div>
+    }
+}

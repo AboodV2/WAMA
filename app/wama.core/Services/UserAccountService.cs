@@ -149,7 +149,7 @@ namespace WAMA.Core.Services
                     throw new InvalidOperationException("No user account updated");
                 }
 
-                dbCtx.Entry(old).CurrentValues.SetValues(updated);
+                dbCtx.Entry(old).CurrentValues.SetValues(updated.UpdateDTO(old));
                 await dbCtx.SaveChangesAsync();
             }
         }

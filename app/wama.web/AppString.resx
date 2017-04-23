@@ -159,6 +159,9 @@
   <data name="GenericErrorMessage" xml:space="preserve">
     <value>Hmm! Seems like something weird happened, please try again in a few.</value>
   </data>
+  <data name="GenericSettingPasswordError" xml:space="preserve">
+    <value>Error setting password, ensure passwords match.</value>
+  </data>
   <data name="ManagerLabel" xml:space="preserve">
     <value>Manager</value>
   </data>

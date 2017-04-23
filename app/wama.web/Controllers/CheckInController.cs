@@ -15,7 +15,10 @@ namespace WAMA.Web.Controllers
         private ICertificationService _CertificationService;
         private static ICheckInService _CheckInService;
 
-        public CheckInController(IUserAccountService userAccountService, ICheckInService checkInService, IWaiverService waiverService, ICertificationService certificationService)
+        public CheckInController(IUserAccountService userAccountService, 
+            ICheckInService checkInService, 
+            IWaiverService waiverService, 
+            ICertificationService certificationService)
         {
             _UserAccountService = userAccountService;
             _waiverService = waiverService;
@@ -30,7 +33,8 @@ namespace WAMA.Web.Controllers
             {
                 SetSuccessMessages(AppString.CheckInSuccessful);
             }
-            if(certificateExpired)
+
+            if (certificateExpired)
             {
                 SetErrorMessages(AppString.CertificateExpired);
             }
@@ -61,23 +65,23 @@ namespace WAMA.Web.Controllers
                 {
                     SetErrorMessages(AppString.AccountSuspended);
                 }
-                else if (certificate != null && System.DateTimeOffset.Compare(System.DateTimeOffset.Now, certificate.ExpiresOn) > 0)
-                {                    
-                    await _CheckInService.PerformCheckInAsync(memberId);
-                    return RedirectToAction(actionName: nameof(Index),
-                        routeValues: new
-                        {
-                            success = true,
-                            certificateExpired = true
-                        });
-                }
-                else if (waiverInfo == null || System.DateTimeOffset.Now.Subtract(waiverInfo.SignedOn).TotalDays >= 90)
+                else if (waiverInfo == null || (DateTimeOffset.Now - waiverInfo.SignedOn).TotalDays >= 90)
                 {
                     return RedirectToAction(
                         actionName: nameof(Waiver),
                         routeValues: new
                         {
                             MemberId = memberId
+                        });
+                }
+                else if (certificate != null && DateTimeOffset.Compare(DateTimeOffset.Now, certificate.ExpiresOn) > 0)
+                {
+                    await _CheckInService.PerformCheckInAsync(memberId);
+                    return RedirectToAction(actionName: nameof(Index),
+                        routeValues: new
+                        {
+                            success = true,
+                            certificateExpired = true
                         });
                 }
                 else
@@ -94,38 +98,25 @@ namespace WAMA.Web.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult WaiverNotSigned()
-        {
-            return View();
-        }
-
         [HttpPost]
-        public async Task<IActionResult> Waiver(string signerName, string memberId)
+        public async Task<IActionResult> Waiver(WaiverViewModel waiver)
         {
-            var userAccount = await _UserAccountService.GetUserAccountAsync(memberId);
-
-            string userName = null;
-            if (userAccount != null)
-            {
-                userName = userAccount.FirstName + " " + userAccount.LastName;
-            }
-
-            if (string.IsNullOrWhiteSpace(signerName) ||
-                string.IsNullOrWhiteSpace(userName) ||
-                !userName.Equals(signerName, StringComparison.OrdinalIgnoreCase))
+            var userAccount = await _UserAccountService.GetUserAccountAsync(waiver?.MemberId);
+            
+            // TODO: Ensure validity of waiver object
+            if (string.IsNullOrWhiteSpace(waiver?.Signature) ||
+                string.IsNullOrWhiteSpace(userAccount?.FirstNameLastName) ||
+                waiver?.Signature.Equals(userAccount?.FirstNameLastName, StringComparison.OrdinalIgnoreCase) == false)
             {
                 SetErrorMessages(AppString.SignatureMismatch);
             }
             else
             {
-                WaiverViewModel waiverViewMode = new WaiverViewModel();
-                waiverViewMode.MemberId = memberId;
-                waiverViewMode.SignedOn = System.DateTimeOffset.Now;
+                waiver.SignedOn = DateTimeOffset.Now;
 
-                await _waiverService.AddWaiverAsync(waiverViewMode);
+                await _waiverService.AddWaiverAsync(waiver);
+                await _CheckInService.PerformCheckInAsync(waiver.MemberId);
 
-                await _CheckInService.PerformCheckInAsync(memberId);
                 return RedirectToAction(actionName: nameof(Index),
                     routeValues: new
                     {
@@ -133,27 +124,16 @@ namespace WAMA.Web.Controllers
                     });
             }
 
-            ViewBag.MemberId = memberId;
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult WaiverSignedButCertificationExpired()
-        {
-            return View();
+            return View(waiver);
         }
 
         [HttpGet]
         public IActionResult Waiver(string memberId)
         {
-            ViewBag.MemberId = memberId;
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult AccountSuspended()
-        {
-            return View();
+            return View(new WaiverViewModel
+            {
+                MemberId = memberId
+            });
         }
     }
 }

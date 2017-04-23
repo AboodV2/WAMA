@@ -5,86 +5,100 @@
 
 @{
     @model UserSearchFilterViewModel
-    <div class="container">
+    <div class="col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
         <h2 class="col-sm-offset-4">Advanced search</h2><br><br>
         <form asp-action="@nameof(WAMA.Web.Controllers.ReportToolController.Users)" method="post" class="form-horizontal">
             <div class="form-group">
-                <label asp-for="Name" class="control-label col-sm-2 col-sm-offset-2"></label>
-                <div class="col-sm-3">
+                <label asp-for="Name" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
                     <input asp-for="Name" class="form-control" placeholder="Enter the Name You are Looking for" />
                 </div>
             </div>
             <div class="form-group">
-                <label asp-for="CommaSeparatedMemberIDs" class="control-label col-sm-2 col-sm-offset-2 "></label>
-                <div class="col-sm-3 ">
-                    <input asp-for="CommaSeparatedMemberIDs" class="form-control" placeholder="Enter the IDs You are Looking for" />
+                <label asp-for="CommaSeparatedMemberIDs" class="control-label col-sm-3 "></label>
+                <div class="col-sm-9 ">
+                    <input asp-for="CommaSeparatedMemberIDs" class="form-control" placeholder="Comma separated member ID" />
                 </div>
             </div>
             <div class="form-group">
-                <label asp-for="AccountTypes" class="control-label col-sm-2 col-sm-offset-2"></label>
-                <div class="col-sm-3">
+                <label asp-for="AccountTypes" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
 
                     @{
-                        var items = Html.GetEnumSelectList<UserAccountType>()
-                            .Where(actType => !actType.Text.Equals(UserAccountType.Unknown.ToString()));
+                            var items = Html.GetEnumSelectList<UserAccountType>()
+                                .Where(actType =>
+                                    actType.Text.Equals($"{UserAccountType.Unknown}") == false &&
+                                    actType.Text.Equals($"{UserAccountType.Mantainance}") == false);
                     }
 
                     <select asp-for="AccountTypes" asp-items="@items" class="form-control"></select>
                 </div>
             </div>
+
             <div class="form-group">
-                <label asp-for="AccountIsSuspended" class="control-label col-sm-2 col-sm-offset-2"></label>
-                <div class="col-sm-3">
-                    <input asp-for="AccountIsSuspended" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="AccountIsApproved" class="control-label col-sm-2 col-sm-offset-2"></label>
-                <div class="col-sm-3">
-                    <input asp-for="AccountIsApproved" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="CertifiedOn" class="control-label col-sm-2 col-sm-offset-2"></label>
-                <div class="col-sm-3">
+                <label asp-for="CertifiedOn" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
                     <input asp-for="CertifiedOn" class="form-control" />
                 </div>
             </div>
             <div class="form-group">
-                <label asp-for="CertifiedBefore" class="control-label col-sm-2 col-sm-offset-2"></label>
-                <div class="col-sm-3">
+                <label asp-for="CertifiedBefore" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
                     <input asp-for="CertifiedBefore" class="form-control" />
                 </div>
             </div>
             <div class="form-group">
-                <label asp-for="CertifiedAfter" class="control-label col-sm-2 col-sm-offset-2"></label>
-                <div class="col-sm-3">
+                <label asp-for="CertifiedAfter" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
                     <input asp-for="CertifiedAfter" class="form-control" />
                 </div>
             </div>
             <div class="form-group">
-                <label asp-for="SignedWaiverOn" class="control-label col-sm-2 col-sm-offset-2"></label>
-                <div class="col-sm-3">
+                <label asp-for="SignedWaiverOn" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
                     <input asp-for="SignedWaiverOn" class="form-control" />
                 </div>
             </div>
             <div class="form-group">
-                <label asp-for="SignedWaiverBefore" class="control-label col-sm-2 col-sm-offset-2"></label>
-                <div class="col-sm-3">
+                <label asp-for="SignedWaiverBefore" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
                     <input asp-for="SignedWaiverBefore" class="form-control" />
                 </div>
             </div>
             <div class="form-group">
-                <label asp-for="SignedWaiverAfter" class="control-label col-sm-2 col-sm-offset-2"></label>
-                <div class="col-sm-3">
+                <label asp-for="SignedWaiverAfter" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
                     <input asp-for="SignedWaiverAfter" class="form-control" />
                 </div>
             </div>
-            <div class="form-group ">
-                <div class="form-group col-xs-12 ">
-                    <button type="submit" class="btn btn-lg btn-primary col-sm-2 col-sm-offset-3">Search</button>
+
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="AccountIsSuspended" /> @Html.LabelFor(x => x.AccountIsSuspended)
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="AccountIsApproved" /> @Html.LabelFor(x => x.AccountIsApproved)
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <button type="submit" class="btn btn-lg btn-primary btn-block">Search</button>
                 </div>
             </div>
         </form>
+
+
     </div>
 }

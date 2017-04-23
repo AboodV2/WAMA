@@ -7,7 +7,7 @@
 @{
     var controllerName = nameof(UserToolController).StripController();
 
-    if (object.Equals(Model, null))
+    if (Equals(Model, null))
     {
         <h1>No user account found</h1>
     }
@@ -15,24 +15,9 @@
     {
         string MemberID = ViewBag.MemberId;
         <div class="col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
-            @if (Model.AccountType == UserAccountType.Patron)
-            {
-                @Html.Partial("DisplayAlerts")
-                <div style="font-size:x-large">
-                    <a href="@Url.Action(controller: controllerName,
-                            action: nameof(UserToolController.ViewAccount),
-                            values: new { MemberId = MemberID })">
-                        <u>Info</u>
-                    </a>
-                    | <a href="@Url.Action(controller: controllerName,
-                                action: nameof(UserToolController.ViewCertifications),
-                                values: new { MemberId = MemberID })">
-                        Certification
-                    </a>
-                    <br />
-                    <br />
-                </div>
-            }
+            @Html.Partial("DisplayAlerts")
+            @Html.Partial("ViewAccountNavigationTab", Model)
+
             @if (Model.HasBeenApproved)
             {
                 <h4 class="display-inline-with-right-padding">
@@ -119,7 +104,7 @@
                     </div>
                 }
 
-                <div class="form-group">
+                <div class="form-group hidden">
                     <button type="submit" class="btn btn-danger">
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> delete account
                     </button>

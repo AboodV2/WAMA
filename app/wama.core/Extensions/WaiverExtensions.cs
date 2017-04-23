@@ -18,7 +18,8 @@ namespace WAMA.Core.Extensions
             return new Waiver
             {
                 MemberId = viewModel.MemberId,
-                SignedOn = viewModel.SignedOn.Date
+                SignedOn = viewModel.SignedOn.Date,
+                Signature = viewModel.Signature
             };
         }
 
@@ -32,7 +33,8 @@ namespace WAMA.Core.Extensions
             return new WaiverViewModel
             {
                 MemberId = dto.MemberId,
-                SignedOn = dto.SignedOn.Date
+                SignedOn = dto.SignedOn.Date,
+                Signature = dto.Signature
             };
         }
     }

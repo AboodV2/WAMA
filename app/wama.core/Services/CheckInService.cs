@@ -127,7 +127,7 @@ namespace WAMA.Core.Services
         /// </summary>
         /// <param name="memberId">The member identifier.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<CheckInActivityViewModel>> GetCheckInActivitiesForMemberAsync(string memberId)
+        public async Task<IEnumerable<CheckInActivityViewModel>> GetCheckInActivitiesAsync(string memberId)
         {
             using (var dbCtx = _DbCtxProvider.GetWamaDbContext())
             {
@@ -222,7 +222,7 @@ namespace WAMA.Core.Services
         {
             using (var dbCtx = _DbCtxProvider.GetWamaDbContext())
             {
-                var old = dbCtx.LogInCredentials.SingleOrDefault(user => user.MemberId.Equals(loginCredential.MemberId));
+                var old = dbCtx.LogInCredentials.SingleOrDefault(_loginCredential => _loginCredential.MemberId == loginCredential.MemberId);
 
                 if (old == null || string.Equals(loginCredential.CurrentPassword, old.HashedPassword) == false)
                 {

@@ -27,14 +27,6 @@ input#check-in-user-id {
     display: inline-block;
 }
 
-td:first-letter {
-    text-transform: uppercase;
-}
-
-td {
-    text-transform: lowercase;
-}
-
 .clear-both {
     clear: both;
 }

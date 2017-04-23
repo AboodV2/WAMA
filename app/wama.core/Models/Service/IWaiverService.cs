@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WAMA.Core.ViewModel;
 
 namespace WAMA.Core.Models.Service
@@ -21,5 +22,12 @@ namespace WAMA.Core.Models.Service
         /// <param name="memberId">The member identifier.</param>
         /// <returns></returns>
         Task<WaiverViewModel> GetWaiverAsync(string memberId);
+
+        /// <summary>
+        /// Gets the waivers asynchronous.
+        /// </summary>
+        /// <param name="memberId">The member identifier.</param>
+        /// <returns></returns>
+        Task<IEnumerable<WaiverViewModel>> GetWaiversAsync(string memberId);
     }
 }

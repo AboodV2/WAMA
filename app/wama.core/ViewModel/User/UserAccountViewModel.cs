@@ -91,5 +91,10 @@ namespace WAMA.Core.ViewModel.User
         /// Gets or sets the request token of this UserAccountViewModel.
         /// </summary>
         public string RequestToken { get; set; }
+
+        /// <summary>
+        /// Gets the combination of First name, Last name (delimited by space).
+        /// </summary>
+        public string FirstNameLastName => $"{FirstName} {LastName}";
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using WAMA.Core.Extensions;
 using WAMA.Core.Models.Provider;
@@ -54,6 +56,22 @@ namespace WAMA.Core.Services
                     .FirstOrDefaultAsync(wv => wv.MemberId == memberId);
 
                 return waiver?.ToViewModel();
+            }
+        }
+
+        /// <summary>
+        /// Gets the waivers asynchronous.
+        /// </summary>
+        /// <param name="memberId">The member identifier.</param>
+        /// <returns></returns>
+        public async Task<IEnumerable<WaiverViewModel>> GetWaiversAsync(string memberId)
+        {
+            using (var dbCtx = _DbCtxProvider.GetWamaDbContext())
+            {
+                return await dbCtx.Waivers
+                    .Where(waiver => waiver.MemberId == memberId)
+                    .Select(waiver => waiver.ToViewModel())
+                    .ToListAsync();
             }
         }
     }

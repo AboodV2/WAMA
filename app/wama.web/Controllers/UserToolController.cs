@@ -26,12 +26,17 @@ namespace WAMA.Web.Controllers
         private IUserAccountService _UserAccountService;
         private ICheckInService _CheckInService;
         private ICertificationService _CertificationService;
+        private IWaiverService _WaiverService;
 
-        public UserToolController(IUserAccountService userAccountService, ICheckInService checkinService, ICertificationService certificationService)
+        public UserToolController(IUserAccountService userAccountService,
+            ICheckInService checkinService,
+            ICertificationService certificationService,
+            IWaiverService waiverService)
         {
             _UserAccountService = userAccountService;
             _CheckInService = checkinService;
             _CertificationService = certificationService;
+            _WaiverService = waiverService;
         }
 
         public async Task<IActionResult> Index()
@@ -358,13 +363,36 @@ namespace WAMA.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> SetPassword(LogInCredentialViewModel loginCredential)
         {
-            if (LoginGredentialMeetsBasicRequirement(loginCredential))
+            try
             {
-                await _CheckInService.SetPasswordForLogInCredentialAsync(loginCredential);
-                return RedirectToAction(nameof(ViewAccount), new { MemberId = loginCredential?.MemberId });
+                if (LoginGredentialMeetsBasicRequirement(loginCredential))
+                {
+                    await _CheckInService.SetPasswordForLogInCredentialAsync(loginCredential);
+                    return RedirectToAction(nameof(ViewAccount), new { MemberId = loginCredential?.MemberId });
+                }
+            }
+            catch (Exception)
+            {
+                SetErrorMessages(AppString.GenericSettingPasswordError);
             }
 
             return View($"{Constants.ADMIN_CONSOLE_USER_TOOL_DIRECTORY}/SetPassword.cshtml", loginCredential);
+        }
+
+        public async Task<IActionResult> ViewCheckins(string memberId)
+        {
+            var checkins = await _CheckInService.GetCheckInActivitiesAsync(memberId);
+            ViewBag.UserAccount = await _UserAccountService.GetUserAccountAsync(memberId);
+
+            return View($"{Constants.ADMIN_CONSOLE_USER_TOOL_DIRECTORY}/ViewCheckins.cshtml", checkins);
+        }
+
+        public async Task<IActionResult> ViewWaivers(string memberId)
+        {
+            var checkins = await _WaiverService.GetWaiversAsync(memberId);
+            ViewBag.UserAccount = await _UserAccountService.GetUserAccountAsync(memberId);
+
+            return View($"{Constants.ADMIN_CONSOLE_USER_TOOL_DIRECTORY}/ViewWaivers.cshtml", checkins);
         }
 
         private async Task<UserAccountViewModel> GetUserAccountAsync(string memberId)
